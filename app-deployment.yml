@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: agent
+  template:
+    metadata:
+      labels:
+        app: agent
+    spec:
+      containers:
+        - name: alpine
+          image: curlimages/curl
+          command:
+            - sleep
+            - "3600"
+          env:
+            - name: "http_proxy"
+              value: "http://nginx-service:80"
+            - name: "no_proxy"
+              value: "www.google.com"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
