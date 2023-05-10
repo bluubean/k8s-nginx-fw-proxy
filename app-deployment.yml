@@ -20,7 +20,7 @@ spec:
             - "3600"
           env:
             - name: "http_proxy"
-              value: "http://nginx-service:80"
+              value: "http://httpd-service:80"
             - name: "no_proxy"
               value: "www.google.com"
           resources:

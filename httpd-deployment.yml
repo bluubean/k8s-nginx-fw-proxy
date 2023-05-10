@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-forward-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: httpd-forward-proxy
+  template:
+    metadata:
+      labels:
+        app: httpd-forward-proxy
+    spec:
+      containers:
+        - name: httpd
+          image: httpd:2.4
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: config-volume
+              mountPath: /usr/local/apache2/conf/httpd.conf
+              subPath: httpd.conf
+      volumes:
+        - name: config-volume
+          configMap:
+            name: httpd-forward-proxy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd-forward-proxy
+spec:
+  selector:
+    app: httpd-forward-proxy
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
